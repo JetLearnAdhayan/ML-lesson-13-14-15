@@ -49,3 +49,40 @@ X_train_corpus = transform(X_train)
 X_test_corpus = transform(X_test)
 
 print(X_train_corpus[0:5])
+
+from sklearn.feature_extraction.text import CountVectorizer
+
+cv = CountVectorizer(ngram_range=(1,2))
+
+X_train_New = cv.fit_transform(X_train_corpus)
+X_test_New = cv.transform(X_test_corpus)
+
+print(X_test_New.shape, X_train_New.shape)
+
+from sklearn.ensemble import RandomForestClassifier
+
+Rf = RandomForestClassifier(n_estimators=100)
+
+Rf.fit(X_train_New, Y_train)
+trainpred = Rf.predict(X_train_New)
+
+testpred = Rf.predict(X_test_New)
+
+def newSentiment(text):
+    trtext = transform(text)
+    trtext = cv.transform(trtext)
+    textpred = Rf.predict(trtext)
+    if textpred[0] == 1:
+        print("negative")
+    else:
+        print("positive")
+
+str1 = ["it is not raining outside so I am very happy"]
+str2 = ["it is getting colder so I am really perplexed"]
+
+print("Sentiment Analysis:")
+newSentiment(str1)
+newSentiment(str2)
+
+
+        
